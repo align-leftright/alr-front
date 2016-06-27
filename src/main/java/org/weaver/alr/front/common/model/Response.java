@@ -1,8 +1,24 @@
 package org.weaver.alr.front.common.model;
 
+import org.weaver.alr.front.common.Result;
+
 public class Response {
-	private String code = "0000";
-	private String message = "Success";
+	private String code;
+	private String message;
+
+	public Response() {
+		this.code = Result.SUCCESS.code();
+		this.message = Result.SUCCESS.desc();
+	}
+
+	public void fail(Result result) {
+		setCode(result.code());
+		setMessage(result.desc());
+	}
+	public void fail(Result result, String message) {
+		setCode(result.code());
+		setMessage(message);
+	}
 
 	public String getCode() {
 		return code;

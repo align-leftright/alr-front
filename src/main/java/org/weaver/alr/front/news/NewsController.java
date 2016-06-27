@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.weaver.alr.front.common.Result;
 import org.weaver.alr.front.common.model.Response;
 import org.weaver.alr.front.news.model.Metadata;
 import org.weaver.alr.front.news.model.MetadataListResponse;
@@ -45,8 +46,7 @@ public class NewsController {
 			resp.setMetadata(m);
 		}
 		else {
-			resp.setCode("0001");
-			resp.setMessage("not found metadata");
+			resp.fail(Result.NOT_FOUND, "not found metadata");
 		}
 		return resp;
 	}
