@@ -1,5 +1,8 @@
 package org.weaver.alr.front.news;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,11 +23,13 @@ import org.weaver.alr.front.news.model.MetadataResponse;
 
 @Controller
 @RequestMapping("/news")
+@Api(value="news api")
 public class NewsController {
 
 	private Map<String,Metadata> metadataMap = new HashMap<String,Metadata>();
 	
 	@RequestMapping(method=RequestMethod.GET)
+	@ApiOperation("get metadata list")
 	public @ResponseBody MetadataListResponse getMetadataList() {
 		List<Metadata> metadataList = new ArrayList<Metadata>();
 		for(Entry<String,Metadata> e: metadataMap.entrySet()) {
@@ -38,6 +43,7 @@ public class NewsController {
 	}
 	
 	@RequestMapping(value="/{id}", method=RequestMethod.GET)
+	@ApiOperation("get metadata")
 	public @ResponseBody MetadataResponse getMetadata(@PathVariable("id")String id) {
 		Metadata m = metadataMap.get(id);
 
@@ -52,6 +58,7 @@ public class NewsController {
 	}
 	
 	@RequestMapping(value="/{id}", method=RequestMethod.POST)
+	@ApiOperation("create metadata")
 	public @ResponseBody Response createMetadata(@PathVariable("id")String id, @RequestBody()Metadata m) {
 		m.setId(id);
 		metadataMap.put(id, m);
