@@ -9,7 +9,7 @@ import org.springframework.context.annotation.PropertySource;
 @SpringBootApplication
 @ComponentScan(basePackages = { "org.weaver.alr.front" })
 @EnableAutoConfiguration
-@PropertySource("system-local.properties")
+@PropertySource("classpath:system-local.properties")
 public class Application {
 
 	public static void main(String[] args) {
