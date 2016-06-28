@@ -9,14 +9,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.weaver.alr.front.common.Constants;
 import org.weaver.alr.front.common.Result;
 import org.weaver.alr.front.common.model.Response;
+import org.weaver.alr.front.common.service.ElasticSearchService;
 import org.weaver.alr.front.news.model.Metadata;
 import org.weaver.alr.front.news.model.MetadataListResponse;
 import org.weaver.alr.front.news.model.MetadataResponse;
@@ -25,16 +28,18 @@ import org.weaver.alr.front.news.model.MetadataResponse;
 @RequestMapping("/news")
 @Api(value="news api")
 public class NewsController {
-
+	
 	private Map<String,Metadata> metadataMap = new HashMap<String,Metadata>();
+	
+	@Autowired
+	private ElasticSearchService esService;
 	
 	@RequestMapping(method=RequestMethod.GET)
 	@ApiOperation("get metadata list")
 	public @ResponseBody MetadataListResponse getMetadataList() {
-		List<Metadata> metadataList = new ArrayList<Metadata>();
-		for(Entry<String,Metadata> e: metadataMap.entrySet()) {
-			metadataList.add(e.getValue());
-		}
+
+		List<Metadata> metadataList = esService.searchDocument(Constants.ES_INDEX,
+				Constants.ES_TYPE_NEWS, null, 0, 30, null, null, Metadata.class);
 
 		MetadataListResponse resp = new MetadataListResponse();
 		resp.setMetadataCount(metadataList.size());
@@ -45,7 +50,8 @@ public class NewsController {
 	@RequestMapping(value="/{id}", method=RequestMethod.GET)
 	@ApiOperation("get metadata")
 	public @ResponseBody MetadataResponse getMetadata(@PathVariable("id")String id) {
-		Metadata m = metadataMap.get(id);
+		Metadata m = esService.getDocument(Constants.ES_INDEX,
+				Constants.ES_TYPE_NEWS, id, Metadata.class);
 
 		MetadataResponse resp = new MetadataResponse();
 		if(m != null) {
@@ -61,7 +67,16 @@ public class NewsController {
 	@ApiOperation("create metadata")
 	public @ResponseBody Response createMetadata(@PathVariable("id")String id, @RequestBody()Metadata m) {
 		m.setId(id);
-		metadataMap.put(id, m);
+		esService.putDocument(Constants.ES_INDEX, Constants.ES_TYPE_NEWS, id, m);
+		
+		Response resp = new Response();
+		return resp;
+	}
+	
+	@RequestMapping(value="/{id}", method=RequestMethod.DELETE)
+	@ApiOperation("delete metadata")
+	public @ResponseBody Response deleteMetadata(@PathVariable("id")String id) {
+		esService.deleteDocument(Constants.ES_INDEX, Constants.ES_TYPE_NEWS, id);
 		
 		Response resp = new Response();
 		return resp;
