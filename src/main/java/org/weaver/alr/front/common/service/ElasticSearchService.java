@@ -119,7 +119,7 @@ public class ElasticSearchService {
 			Integer from, Integer size,
 			String sortField, Integer sortOrder,
 			Class<T> clazz) {
-		List<T> docList = null;
+		List<T> docList = new ArrayList<T>();
 		QueryBuilder qb = null;
 		SortBuilder sb = null;
 		
@@ -139,6 +139,9 @@ public class ElasticSearchService {
 				sb.order(SortOrder.ASC);
 			}
 		}
+		else {
+			sb = SortBuilders.scoreSort();
+		}
 
 		if(fields != null && fields.size() > 0) {
 			qb = QueryBuilders.boolQuery();
@@ -150,7 +153,9 @@ public class ElasticSearchService {
 			qb = QueryBuilders.matchAllQuery();
 		}
 
-		SearchResponse response = esClient
+		SearchResponse response = null;
+		try {
+			response = esClient
 				.prepareSearch(index)
 				.setTypes(docType)
 				.setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
@@ -158,9 +163,12 @@ public class ElasticSearchService {
 				.setFrom(from).setSize(size)
 				.addSort(sb)
 				.get();
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
 		
 		if(response != null) {
-			docList = new ArrayList<T>();
 			for(SearchHit hit: response.getHits().getHits()) {
 				try {
 					docList.add(map2obj(hit.getSource(), clazz));
