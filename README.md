@@ -1,6 +1,6 @@
-# alr-front
-Front-end server of ALR project  
-Support RestFul APIs for ALR client  
+# ALR-Front
+ALR-Front is front-end server of ALR project  
+It supports RestFul APIs for ALR client  
 
 ## Getting Started
 * Download source from github:
@@ -14,12 +14,12 @@ $ cd alr-front
 $ ./gradlew clean build
 ```
 
-* Run alr-front server:
+* Run server:
 ```
 $ ./server.sh start
 ```
 
-* Stop alr-front server:
+* Stop server:
 ```
 $ ./server.sh stop
 ```
