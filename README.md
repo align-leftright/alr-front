@@ -3,16 +3,18 @@ ALR project front-end server
 Support RestFul APIs for ALR client  
 
 ## Getting Started
-1. download source from github
+* download source from github:
 ```
 $ git clone https://github.com/align-leftright/alr-front.git
 ```
-2. build source
+
+* build source:
 ```
 $ cd alr-front
 $ ./gradlew clean build
 ```
-3. run alr-front server
+
+* run alr-front server:
 ```
 $ ./server.sh start
 ```
