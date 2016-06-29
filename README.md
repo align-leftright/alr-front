@@ -1,5 +1,5 @@
 # alr-front
-Front-end server of ALR project
+Front-end server of ALR project  
 Support RestFul APIs for ALR client  
 
 ## Getting Started
