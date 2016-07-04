@@ -11,7 +11,7 @@ public class Metadata {
 	private String description;
 	private String imageUrl;
 	private String linkUrl;
-	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss.SSSZ")
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private Date publishedDate;
 
 	public String getId() {
