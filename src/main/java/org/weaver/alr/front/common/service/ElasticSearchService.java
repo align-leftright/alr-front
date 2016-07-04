@@ -219,7 +219,7 @@ public class ElasticSearchService {
 			if(value != null) {
 				f.setAccessible(true);
 				if(f.getType() == Date.class) {
-					DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SZ");
+					DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.S");
 					f.set(obj, format.parse((String)value));
 				}
 				else {
