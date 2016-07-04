@@ -7,7 +7,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -30,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.weaver.alr.front.common.model.Page;
 
 
 @Component
@@ -124,11 +124,11 @@ public class ElasticSearchService {
 		return 0;
 	}
 	
-	public <T> List<T> searchDocument(String index, String docType, Map<String,String> fields,
+	public <T> Page<T> searchDocument(String index, String docType, Map<String,String> fields,
 			Integer from, Integer size,
 			String sortField, Integer sortOrder,
 			Class<T> clazz) {
-		List<T> docList = new ArrayList<T>();
+		Page<T> docList = new Page<T>();
 		QueryBuilder qb = null;
 		SortBuilder sb = null;
 		
@@ -138,6 +138,9 @@ public class ElasticSearchService {
 		if(size == null) {
 			size = 100;
 		}
+		
+		docList.setFrom(from);
+		docList.setSize(size);
 
 		if(sortField != null && sortOrder != null) {
 			sb = SortBuilders.fieldSort(sortField);
@@ -178,9 +181,12 @@ public class ElasticSearchService {
 		}
 		
 		if(response != null) {
+			docList.setTotal((int)response.getHits().getTotalHits());
+			docList.setCount(response.getHits().getHits().length);
+			docList.setItems(new ArrayList<T>());
 			for(SearchHit hit: response.getHits().getHits()) {
 				try {
-					docList.add(map2obj(hit.getSource(), clazz));
+					docList.getItems().add(map2obj(hit.getSource(), clazz));
 				} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | ParseException e) {
 					logger.error("parse map2obj fail", e);
 				}

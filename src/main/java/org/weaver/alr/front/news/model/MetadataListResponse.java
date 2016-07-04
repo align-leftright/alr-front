@@ -1,12 +1,11 @@
 package org.weaver.alr.front.news.model;
 
-import java.util.List;
-
+import org.weaver.alr.front.common.model.Page;
 import org.weaver.alr.front.common.model.Response;
 
 public class MetadataListResponse extends Response {
 	private Integer metadataCount;
-	private List<Metadata> metadataList;
+	private Page<Metadata> metadataList;
 
 	public Integer getMetadataCount() {
 		return metadataCount;
@@ -14,10 +13,10 @@ public class MetadataListResponse extends Response {
 	public void setMetadataCount(Integer metadataCount) {
 		this.metadataCount = metadataCount;
 	}
-	public List<Metadata> getMetadataList() {
+	public Page<Metadata> getMetadataList() {
 		return metadataList;
 	}
-	public void setMetadataList(List<Metadata> metadataList) {
+	public void setMetadataList(Page<Metadata> metadataList) {
 		this.metadataList = metadataList;
 	}
 	
