@@ -1,7 +1,11 @@
 package org.weaver.alr.front.common.service;
 
 import java.lang.reflect.Field;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +46,7 @@ public class ElasticSearchService {
 		if(response != null && response.getSource() != null) {
 			try {
 				return map2obj(response.getSource(), clazz);
-			} catch (InstantiationException | IllegalAccessException e) {
+			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | ParseException e) {
 				e.printStackTrace();
 			}
 		}
@@ -172,7 +176,7 @@ public class ElasticSearchService {
 			for(SearchHit hit: response.getHits().getHits()) {
 				try {
 					docList.add(map2obj(hit.getSource(), clazz));
-				} catch (InstantiationException | IllegalAccessException e) {
+				} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | ParseException e) {
 					e.printStackTrace();
 				}
 			}
@@ -203,13 +207,19 @@ public class ElasticSearchService {
 		return 0;
 	}
 	
-	private <T> T map2obj(Map<String,Object> map, Class<T> clazz) throws InstantiationException, IllegalAccessException {
+	private <T> T map2obj(Map<String,Object> map, Class<T> clazz) throws InstantiationException, IllegalAccessException, IllegalArgumentException, ParseException {
 		T obj = clazz.newInstance();
 		for(Field f: clazz.getDeclaredFields()) {
 			Object value = map.get(f.getName());
 			if(value != null) {
 				f.setAccessible(true);
-				f.set(obj, value);
+				if(f.getType() == Date.class) {
+					DateFormat format = new SimpleDateFormat("yyyy-MM-ddTHH:mm:ss.SZ");
+					f.set(obj, format.parse((String)value));
+				}
+				else {
+					f.set(obj, value);
+				}
 			}
 		}
 		return obj;
