@@ -33,7 +33,7 @@ public class NewsController {
 	public @ResponseBody MetadataListResponse getMetadataList() {
 
 		List<Metadata> metadataList = esService.searchDocument(Constants.ES_INDEX,
-				Constants.ES_TYPE_NEWS, null, 0, 30, null, null, Metadata.class);
+				Constants.ES_TYPE_NEWS, null, 0, 30, "publishedDate", ElasticSearchService.SORT_DESC, Metadata.class);
 
 		MetadataListResponse resp = new MetadataListResponse();
 		resp.setMetadataCount(metadataList.size());

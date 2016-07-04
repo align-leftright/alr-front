@@ -1,5 +1,7 @@
 package org.weaver.alr.front.news.model;
 
+import java.util.Date;
+
 public class Metadata {
 	private String id;
 	private String channel;
@@ -7,6 +9,7 @@ public class Metadata {
 	private String description;
 	private String imageUrl;
 	private String linkUrl;
+	private Date publishedDate;
 
 	public String getId() {
 		return id;
@@ -43,6 +46,12 @@ public class Metadata {
 	}
 	public void setLinkUrl(String linkUrl) {
 		this.linkUrl = linkUrl;
+	}
+	public Date getPublishedDate() {
+		return publishedDate;
+	}
+	public void setPublishedDate(Date publishedDate) {
+		this.publishedDate = publishedDate;
 	}
 	
 }
