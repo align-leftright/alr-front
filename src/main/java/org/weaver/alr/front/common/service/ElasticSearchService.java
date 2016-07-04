@@ -26,11 +26,16 @@ import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.sort.SortBuilder;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+
 @Component
 public class ElasticSearchService {
+	
+	private static final Logger logger = LoggerFactory.getLogger(ElasticSearchService.class);
 	
 	public static final Integer SORT_DESC	= 0;
 	public static final Integer SORT_ASC	= 1;
@@ -47,7 +52,7 @@ public class ElasticSearchService {
 			try {
 				return map2obj(response.getSource(), clazz);
 			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | ParseException e) {
-				e.printStackTrace();
+				logger.error("parse map2obj fail", e);
 			}
 		}
 		return null;
@@ -63,7 +68,7 @@ public class ElasticSearchService {
 				return response.getVersion();
 			}
 		} catch (IllegalArgumentException | IllegalAccessException e) {
-			e.printStackTrace();
+			logger.error("send index fail", e);
 		}
 		return 0;
 	}
@@ -88,7 +93,7 @@ public class ElasticSearchService {
 				return response.getVersion();
 			}
 		} catch (IllegalArgumentException | IllegalAccessException e) {
-			e.printStackTrace();
+			logger.error("send update fail", e);
 		}
 		return 0;
 	}
@@ -114,7 +119,7 @@ public class ElasticSearchService {
 				return response.getVersion();
 			}
 		} catch (IllegalArgumentException | IllegalAccessException e) {
-			e.printStackTrace();
+			logger.error("send upsert fail", e);
 		}
 		return 0;
 	}
@@ -169,7 +174,7 @@ public class ElasticSearchService {
 				.get();
 		}
 		catch(Exception e) {
-			e.printStackTrace();
+			logger.error("send search fail", e);
 		}
 		
 		if(response != null) {
@@ -177,7 +182,7 @@ public class ElasticSearchService {
 				try {
 					docList.add(map2obj(hit.getSource(), clazz));
 				} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | ParseException e) {
-					e.printStackTrace();
+					logger.error("parse map2obj fail", e);
 				}
 			}
 		}
